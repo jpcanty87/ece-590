@@ -19,8 +19,8 @@ int main()
     add_kwargs_double(eval, "a", 5);
 
     int dim = 0;
-    size_t *shape = nullptr;
-    double *data = nullptr;
+    size_t *shape = new size_t;
+    double *data = new double;
     if (execute(eval, &dim, &shape, &data) != 0)
     {
         printf("evaluation fails\n");

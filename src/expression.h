@@ -27,6 +27,18 @@ public:
         int dim,
         size_t shape[],
         double data[]);
+    int get_expr_id();
+    const char *get_op_name();
+    const char *get_op_type();
+    int *get_inputs();
+    int get_num_inputs();
+
+private:
+    int expr_id;
+    const char *op_name;
+    const char *op_type;
+    int *inputs;
+    int num_inputs;
 }; // class expression
 
 #endif // EXPRESSION_H
