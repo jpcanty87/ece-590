@@ -16,11 +16,14 @@ void program::append_expression(
     int inputs[],
     int num_inputs)
 {
-    expression *exp = new expression(expr_id, op_name, op_type, inputs, num_inputs);
+    std::string op_name_str = op_name;
+    std::string op_type_str = op_type;
+    expression *exp = new expression(expr_id, op_name_str, op_type_str, inputs, num_inputs);
     expressions.push_back(*exp);
-    std::string op = op_name;
-    if (op.compare("") != 0) {
-        associations[op] = expr_id;
+    if (op_name_str.compare("") != 0) {
+        associations[op_name_str] = expr_id;
+    } else if (op_type_str.compare("") != 0) {
+        associations["value"] = expr_id;
     }
 }
 
@@ -29,10 +32,11 @@ int program::add_op_param_double(
     double value)
 {  
     std::string k = key;
-    std::cout << "Program" << '\n';
-    std::cout << k << '\n';
-    std::cout << value << '\n';
-    return -1;
+    auto search = associations.find(k);
+    if (search != associations.end()) {
+        values[search->second] = value;
+    }
+    return 0;
 }
 
 int program::add_op_param_ndarray(
@@ -46,6 +50,34 @@ int program::add_op_param_ndarray(
 
 evaluation *program::build()
 {   
-    evaluation *eval = new evaluation(expressions, associations);
+    evaluation *eval = new evaluation(expressions, associations, values);
     return eval;
+}
+
+void program::print_expressions()
+{
+    for(auto elem : expressions)
+    {
+        elem.print_expression();
+    }
+}
+
+void program::print_assocs() 
+{
+    std::cout << "++++++++++" << '\n';
+    for(auto elem : associations)
+    {
+    std::cout << elem.first << " -> " << elem.second << "\n";
+    }
+    std::cout << "++++++++++" << '\n';
+}
+
+void program::print_values() 
+{
+    std::cout << "//////////" << '\n';
+    for(auto elem : values)
+    {
+    std::cout << elem.first << " -> " << elem.second << "\n";
+    }
+    std::cout << "//////////" << '\n';
 }

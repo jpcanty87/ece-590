@@ -12,6 +12,7 @@ class program
 {
     std::vector<expression> expressions;
     std::map<std::string, int> associations;
+    std::map<int, double> values;
     public:
         program();
 
@@ -35,6 +36,10 @@ class program
             double data[]);
 
         evaluation *build();
+
+        void print_expressions();
+        void print_assocs();
+        void print_values();
 }; // class program
 
 #endif // PROGRAM_H

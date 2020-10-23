@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <list>
 
 class evaluation;
 
@@ -13,8 +14,8 @@ class expression
 public:
     expression(
         int expr_id,
-        const char *op_name,
-        const char *op_type,
+        std::string op_name,
+        std::string op_type,
         int *inputs,
         int num_inputs);
 
@@ -28,17 +29,18 @@ public:
         size_t shape[],
         double data[]);
     int get_expr_id();
-    const char *get_op_name();
-    const char *get_op_type();
-    int *get_inputs();
+    std::string get_op_name();
+    std::string get_op_type();
+    std::list<int> get_inputs();
     int get_num_inputs();
+    void print_expression();
+    void print_inputs();
 
 private:
     int expr_id;
-    const char *op_name;
-    const char *op_type;
-    int *inputs;
-    int num_inputs;
+    std::string op_name;
+    std::string op_type;
+    std::list<int> inputs;
 }; // class expression
 
 #endif // EXPRESSION_H

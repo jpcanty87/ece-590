@@ -3,16 +3,18 @@
 
 expression::expression(
     int expr_id,
-    const char *op_name,
-    const char *op_type,
+    std::string op_name,
+    std::string op_type,
     int *inputs,
     int num_inputs)
 {
     expression::expr_id = expr_id;
     expression::op_name = op_name;
     expression::op_type = op_type;
-    expression::inputs = inputs;
-    expression::num_inputs = num_inputs;
+    int* end = inputs + num_inputs;
+    for (int *p = inputs; p != end; ++p) {
+        expression::inputs.push_back(*p);
+    }
 }
 
 void expression::add_op_param_double(
@@ -37,18 +39,36 @@ int expression::get_expr_id () {
     return expr_id;
 }
 
-const char *expression::get_op_name() {
+std::string expression::get_op_name() {
     return op_name;
 }
 
-const char *expression::get_op_type() {
+std::string expression::get_op_type() {
     return op_type;
 }
 
-int *expression::get_inputs() {
+std::list<int> expression::get_inputs() {
     return inputs;
 }
     
 int expression::get_num_inputs() {
-    return num_inputs;
+    return inputs.size();
+}
+
+void expression::print_expression() {
+    std::cout << "###########" << '\n';
+    std::cout << "expr_id: " << expr_id << '\n';
+    std::cout << "op_type: " << op_type << '\n';
+    std::cout << "op_name: " << op_name << '\n';
+    print_inputs();
+    std::cout << "###########" << '\n';
+}
+
+void expression::print_inputs() {
+    
+    std::cout << "inputs:" << '\n';
+    for(auto elem : inputs)
+    {
+    std::cout << elem << "\n";
+    }
 }
