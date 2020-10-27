@@ -95,9 +95,15 @@ int execute(
     int ret = eval->execute();
     if (ret != 0)
         return ret;
-    *p_dim = eval->get_dim();
-    *p_shape = &eval->get_shape();
-    *p_data = &eval->get_result();
+    if (eval->is_eval_scalar()) {
+        *p_dim = 0;
+        *p_shape = nullptr;
+        *p_data = &eval->get_result();
+    } else {
+        *p_dim = eval->get_dim();
+        *p_shape = eval->get_shape();
+        *p_data = eval->get_data();
+    }
     fflush(stdout);
     return 0;
 }

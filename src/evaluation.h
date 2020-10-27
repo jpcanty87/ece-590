@@ -29,13 +29,16 @@ class evaluation
         // return the variable computed by the last expression
         double &get_result();
         int get_dim();
-        size_t &get_shape();
+        size_t *get_shape();
+        double *get_data();
 
         void print_assocs();
 
         void print_values();
 
         void print_result();
+
+        void print_array_attrs();
 
         bool is_eval_scalar();
 
@@ -46,7 +49,8 @@ class evaluation
         std::map<int, ndarray *> array_values;
         double result_;
         int dim_;
-        size_t shape_;
+        size_t *shape_;
+        double *data_;
 }; // class evaluation
 
 #endif // EVALUATION_H

@@ -8,7 +8,7 @@ evaluation::evaluation(
     const std::map<std::string, int> &assocs, 
     std::map<int, double> &vals,
     std::map<int, ndarray *> &array_vals)
-    : result_(0), dim_(0), shape_(0)
+    : result_(0), dim_(0), shape_(nullptr), data_(nullptr)
 {
     expressions = exprs;
     associations = assocs;
@@ -40,7 +40,6 @@ void evaluation::add_kwargs_ndarray(
     if (search != associations.end()) {
         ndarray * array = new ndarray(dim, shape, data);
         array_values[search->second] = array;
-        array_values[search->second]->print_ndarray();
     }
 }
 
@@ -55,7 +54,13 @@ int evaluation::execute()
         std::list<int> inputs = exp.get_inputs();
         auto search = associations.find(op_name);
         if (op_type.compare("Input") == 0 || op_type.compare("Const") == 0 || search != associations.end()) {
-            total = values[expr_id];
+            if (is_eval_scalar()) {
+                total = values[expr_id];
+            } else {
+                dim_ = array_values[expr_id]->get_dim();
+                data_ = array_values[expr_id]->get_data();
+                shape_ = array_values[expr_id]->get_shape();
+            }
             continue;
         }
         bool firstLoop = true;
@@ -90,34 +95,22 @@ int evaluation::execute()
 
 double &evaluation::get_result()
 {
-    if (is_eval_scalar())
-        return result_;
-    else {
-        double yeet = 0;
-        return yeet;
-    }
+    return result_;
 }
 
 int evaluation::get_dim()
 {
-    if (is_eval_scalar()){
-        int yeet = 0;
-        return yeet;
-    }
-    else {
-        return dim_;
-    }
+    return dim_;
 }
 
-size_t &evaluation::get_shape()
+size_t *evaluation::get_shape()
 {
-    if (is_eval_scalar()){
-        size_t yeet = 0;
-        return yeet;
-    }
-    else {
-        return shape_;
-    }
+    return shape_;
+}
+
+double *evaluation::get_data()
+{
+    return data_;
 }
 
 void evaluation::print_assocs() 
@@ -149,4 +142,15 @@ void evaluation::print_result()
 
 bool evaluation::is_eval_scalar() {
     return array_values.empty();
+}
+
+void evaluation::print_array_attrs()
+{
+    std::cout << "~~~~~~~" << '\n';
+    for(auto elem : array_values)
+    {
+    std::cout << elem.first << "\n";
+    elem.second->print_ndarray();
+    }
+    std::cout << "~~~~~~" << '\n';
 }
