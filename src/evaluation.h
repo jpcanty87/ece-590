@@ -2,11 +2,16 @@
 #define EVALUATION_H
 
 #include "expression.h"
+#include "ndarray.h"
 
 class evaluation
 {
     public:
-        evaluation(const std::vector<expression> &exprs, const std::map<std::string, int> &assocs, std::map<int, double> &vals);
+        evaluation(
+            const std::vector<expression> &exprs, 
+            const std::map<std::string, int> &assocs, 
+            std::map<int, double> &vals,
+            std::map<int, ndarray *> &array_vals);
 
         void add_kwargs_double(
             const char *key,
@@ -23,6 +28,8 @@ class evaluation
 
         // return the variable computed by the last expression
         double &get_result();
+        int get_dim();
+        size_t &get_shape();
 
         void print_assocs();
 
@@ -30,11 +37,16 @@ class evaluation
 
         void print_result();
 
+        bool is_eval_scalar();
+
     private:
         std::map<int, double> values;
         std::map<std::string, int> associations;
         std::vector<expression> expressions;
+        std::map<int, ndarray *> array_values;
         double result_;
+        int dim_;
+        size_t shape_;
 }; // class evaluation
 
 #endif // EVALUATION_H

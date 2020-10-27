@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include "ndarray.h"
 
 program::program()
 {
@@ -35,8 +36,10 @@ int program::add_op_param_double(
     auto search = associations.find(k);
     if (search != associations.end()) {
         values[search->second] = value;
+        return 0;
+    } else {
+        return -1;
     }
-    return 0;
 }
 
 int program::add_op_param_ndarray(
@@ -44,13 +47,22 @@ int program::add_op_param_ndarray(
     int dim,
     size_t shape[],
     double data[])
-{
-    return -1;
+{ 
+    std::string k = key;
+    
+    auto search = associations.find(k);
+    if (search != associations.end()) {
+        ndarray * array = new ndarray(dim, shape, data);
+        array_values[search->second] = array;
+        return 0;
+    } else {
+        return -1;
+    }
 }
 
 evaluation *program::build()
 {   
-    evaluation *eval = new evaluation(expressions, associations, values);
+    evaluation *eval = new evaluation(expressions, associations, values, array_values);
     return eval;
 }
 

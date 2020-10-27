@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include "ndarray.h"
 
 class evaluation;
 
@@ -13,6 +14,8 @@ class program
     std::vector<expression> expressions;
     std::map<std::string, int> associations;
     std::map<int, double> values;
+    std::map<int, double> values_ndarray;
+    std::map<int, ndarray *> array_values;
     public:
         program();
 

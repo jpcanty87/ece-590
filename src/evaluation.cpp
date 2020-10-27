@@ -1,13 +1,19 @@
 #include <assert.h>
 #include "evaluation.h"
 #include <iostream>
+#include "ndarray.h"
 
-evaluation::evaluation(const std::vector<expression> &exprs, const std::map<std::string, int> &assocs, std::map<int, double> &vals)
-    : result_(0)
+evaluation::evaluation(
+    const std::vector<expression> &exprs, 
+    const std::map<std::string, int> &assocs, 
+    std::map<int, double> &vals,
+    std::map<int, ndarray *> &array_vals)
+    : result_(0), dim_(0), shape_(0)
 {
     expressions = exprs;
     associations = assocs;
     values = vals;
+    array_values = array_values;
 }
 
 void evaluation::add_kwargs_double(
@@ -28,6 +34,13 @@ void evaluation::add_kwargs_ndarray(
     size_t shape[],
     double data[])
 {
+    std::string k = key;
+    
+    auto search = associations.find(k);
+    if (search != associations.end()) {
+        ndarray * array = new ndarray(dim, shape, data);
+        array_values[search->second] = array;
+    }
 }
 
 int evaluation::execute()
@@ -76,7 +89,34 @@ int evaluation::execute()
 
 double &evaluation::get_result()
 {
-    return result_;
+    if (is_eval_scalar())
+        return result_;
+    else {
+        double yeet = 0;
+        return yeet;
+    }
+}
+
+int evaluation::get_dim()
+{
+    if (is_eval_scalar()){
+        int yeet = 0;
+        return yeet;
+    }
+    else {
+        return dim_;
+    }
+}
+
+size_t &evaluation::get_shape()
+{
+    if (is_eval_scalar()){
+        size_t yeet = 0;
+        return yeet;
+    }
+    else {
+        return shape_;
+    }
 }
 
 void evaluation::print_assocs() 
@@ -104,4 +144,8 @@ void evaluation::print_result()
     std::cout << "$$$$$$$" << '\n';
     std::cout << result_ << '\n';
     std::cout << "$$$$$$$" << '\n';
+}
+
+bool evaluation::is_eval_scalar() {
+    return array_values.empty();
 }

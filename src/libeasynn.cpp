@@ -95,8 +95,8 @@ int execute(
     int ret = eval->execute();
     if (ret != 0)
         return ret;
-    *p_dim = 0;
-    *p_shape = nullptr;
+    *p_dim = eval->get_dim();
+    *p_shape = &eval->get_shape();
     *p_data = &eval->get_result();
     fflush(stdout);
     return 0;
