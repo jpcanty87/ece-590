@@ -43,6 +43,7 @@ class program
         void print_expressions();
         void print_assocs();
         void print_values();
+        void print_array_values();
 }; // class program
 
 #endif // PROGRAM_H

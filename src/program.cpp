@@ -49,11 +49,11 @@ int program::add_op_param_ndarray(
     double data[])
 { 
     std::string k = key;
-    
     auto search = associations.find(k);
     if (search != associations.end()) {
         ndarray * array = new ndarray(dim, shape, data);
         array_values[search->second] = array;
+
         return 0;
     } else {
         return -1;
@@ -63,6 +63,7 @@ int program::add_op_param_ndarray(
 evaluation *program::build()
 {   
     evaluation *eval = new evaluation(expressions, associations, values, array_values);
+    
     return eval;
 }
 
@@ -92,4 +93,15 @@ void program::print_values()
     std::cout << elem.first << " -> " << elem.second << "\n";
     }
     std::cout << "//////////" << '\n';
+}
+
+void program::print_array_values()
+{
+    std::cout << "~~~~~~~" << '\n';
+    for(auto elem : array_values)
+    {
+    std::cout << elem.first << "\n";
+    elem.second->print_ndarray();
+    }
+    std::cout << "~~~~~~" << '\n';
 }

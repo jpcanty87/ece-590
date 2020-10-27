@@ -13,7 +13,7 @@ evaluation::evaluation(
     expressions = exprs;
     associations = assocs;
     values = vals;
-    array_values = array_values;
+    array_values = array_vals;
 }
 
 void evaluation::add_kwargs_double(
