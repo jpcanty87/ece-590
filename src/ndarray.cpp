@@ -11,10 +11,14 @@ ndarray::ndarray(int dim,
 
 void ndarray::print_ndarray() {
     std::cout << "~~~~~~~~~~~~~~~~~~~~" << '\n';
+
+    size_t size = 0;
     for (int i = 0; i != dim; ++i) {
-        size_t size = shape[i];
-        for (size_t j = 0; j != size; ++j) {
-            std::cout << data[j] << '\n';
+        int y = 0;
+        size_t j = size;
+        size += shape[i];
+        for (j; j != size; ++j) {
+            std::cout << y++ << ": " << data[j] << '\n';
         } 
     }
 }

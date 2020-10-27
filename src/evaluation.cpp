@@ -40,6 +40,7 @@ void evaluation::add_kwargs_ndarray(
     if (search != associations.end()) {
         ndarray * array = new ndarray(dim, shape, data);
         array_values[search->second] = array;
+        array_values[search->second]->print_ndarray();
     }
 }
 
