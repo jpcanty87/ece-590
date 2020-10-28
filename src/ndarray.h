@@ -14,12 +14,17 @@ public:
         size_t shape[],
         double data[]);
     void print_ndarray();
+    void partial_print_ndarray(size_t stop);
     int get_dim();
     size_t *get_shape();
     double *get_data();
+    size_t get_total_size();
     void populate_ndarray(int dim,
         size_t shape[],
         double data[]);
+    void add_data(ndarray * array);
+    void sub_data(ndarray * array);
+    void mul_data(ndarray * array);
 
 private:
     int dim;

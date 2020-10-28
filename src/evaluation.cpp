@@ -64,33 +64,68 @@ int evaluation::execute()
             continue;
         }
         bool firstLoop = true;
+        std::list<ndarray *> arrays;
         for (auto input : inputs) {
-            if (op_type.compare("Add") == 0) {
-                total += values[input];
-            }
-            else if (op_type.compare("Sub") == 0) {
-                if (firstLoop) {
-                    total = values[input];
-                } else {
-                    total -= values[input];
+            if (is_eval_scalar()) {
+                if (op_type.compare("Add") == 0) {
+                    total += values[input];
                 }
-            }
-            else if (op_type.compare("Mul") == 0) {
-                if (total == 0 && firstLoop) {
-                    total = 1;
+                else if (op_type.compare("Sub") == 0) {
+                    if (firstLoop) {
+                        total = values[input];
+                    } else {
+                        total -= values[input];
+                    }
                 }
-                total *= values[input];
+                else if (op_type.compare("Mul") == 0) {
+                    if (total == 0 && firstLoop) {
+                        total = 1;
+                    }
+                    total *= values[input];
+                }
+                else {
+                    std::cout << "Incorrect Op Type" << '\n';
+                    return -1;
+                }
+                firstLoop = false;
+            } else {
+                arrays.push_back(array_values[input]);
             }
-            else {
-                std::cout << "Incorrect Op Type" << '\n';
-                return -1;
-            }
-            firstLoop = false;
         }
         values[expr_id] = total;
+        array_values[expr_id] = evaluate_ndarrays(arrays, op_type);
+        dim_ = array_values[expr_id]->get_dim();
+        data_ = array_values[expr_id]->get_data();
+        shape_ = array_values[expr_id]->get_shape();
     }
     result_ = total;
     return 0;
+}
+
+ndarray * evaluation::evaluate_ndarrays(std::list<ndarray *> arrays, std::string op_type) {
+    ndarray * result;
+    bool firstLoop = true;
+    for (auto array : arrays) {
+        if (firstLoop) {
+            result = new ndarray(array->get_dim(), array->get_shape(), array->get_data());
+            firstLoop = false;
+            continue;
+        }
+        if (op_type.compare("Add") == 0) {
+            result->add_data(array);
+        }
+        else if (op_type.compare("Sub") == 0) {
+            result->sub_data(array);
+        }
+        else if (op_type.compare("Mul") == 0) {
+            result->mul_data(array);
+        }
+        else {
+            std::cout << "Incorrect Op Type" << '\n';
+            return nullptr;
+        }
+    }
+    return result;
 }
 
 double &evaluation::get_result()

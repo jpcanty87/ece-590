@@ -42,6 +42,8 @@ class evaluation
 
         bool is_eval_scalar();
 
+        ndarray *evaluate_ndarrays(std::list<ndarray *> arrays, std::string op_type);
+
     private:
         std::map<int, double> values;
         std::map<std::string, int> associations;

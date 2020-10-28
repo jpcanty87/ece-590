@@ -36,6 +36,63 @@ void ndarray::print_ndarray() {
     std::cout << "~~~~~~~~~~~~~~~~~~~~" << '\n';
 }
 
+void ndarray::partial_print_ndarray(size_t stop) {
+    std::cout << "~~~~~~~~~~~~~~~~~~~~" << '\n';
+    int i = 1;
+    for (size_t size = --total_size; size > total_size - stop; --size) {
+        std::cout << size << ": " << data[size] << '\n';
+    }
+    std::cout << "~~~~~~~~~~~~~~~~~~~~" << '\n';
+}
+
+
+void ndarray::add_data(ndarray * array) {
+    double * ext_data = array->get_data();
+    size_t ext_total_size = array->get_total_size();
+    if (total_size == ext_total_size) {
+        for (size_t size = 0; size < total_size; ++size) {
+            double old_data = data[size];
+            double ext_data_val = ext_data[size];
+            data[size] = old_data + ext_data_val;
+        }
+    } else {
+        std::cout << "SOMETHING IS TERRIBLY WRONG" << '\n';
+    }
+}
+
+void ndarray::sub_data(ndarray * array) {
+    double * ext_data = array->get_data();
+    size_t ext_total_size = array->get_total_size();
+    if (total_size == ext_total_size) {
+        for (size_t size = 0; size < total_size; ++size) {
+            double old_data = data[size];
+            double ext_data_val = ext_data[size];
+            data[size] = old_data - ext_data_val;
+        }
+    } else {
+        std::cout << "SOMETHING IS TERRIBLY WRONG" << '\n';
+    }
+    
+}
+
+void ndarray::mul_data(ndarray * array) {
+    print_ndarray();
+    array->print_ndarray();
+    double * ext_data = array->get_data();
+    size_t ext_total_size = array->get_total_size();
+
+    size_t rows = shape[0];
+    size_t cols = shape[1];
+    size_t ext_rows = array->get_shape()[0];
+    size_t ext_cols = array->get_shape()[1];
+    for (size_t size = 0; size < total_size; ++size) {
+        double old_data = data[size];
+        double ext_data_val = ext_data[size];
+        data[size] = old_data * ext_data_val;
+    }
+    
+}
+
 int ndarray::get_dim() {
     return dim;
 }
@@ -46,4 +103,8 @@ size_t *ndarray::get_shape() {
 
 double *ndarray::get_data() {
     return data;
+}
+
+size_t ndarray::get_total_size() {
+    return total_size;
 }
