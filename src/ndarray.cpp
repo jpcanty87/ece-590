@@ -85,7 +85,9 @@ void ndarray::mul_data(ndarray * array) {
     size_t cols = shape[1];
     size_t ext_rows = array->get_shape()[0];
     size_t ext_cols = array->get_shape()[1];
-    for (size_t size = 0; size < total_size; ++size) {
+    for (size_t size = 0; size < total_size; size+=cols) {
+        std::list<double> local_col_vector;
+        std::list<double> ext_row_vector;
         double old_data = data[size];
         double ext_data_val = ext_data[size];
         data[size] = old_data * ext_data_val;
