@@ -37,6 +37,9 @@ int program::add_op_param_double(
     if (search != associations.end()) {
         values[search->second] = value;
         return 0;
+    } else if (k.compare("height") == 0 || k.compare("width") == 0 || k.compare("in_channels") == 0) {
+        associations[k] = value;
+        return 0;
     } else {
         return -1;
     }
@@ -53,7 +56,6 @@ int program::add_op_param_ndarray(
     if (search != associations.end()) {
         ndarray * array = new ndarray(dim, shape, data);
         array_values[search->second] = array;
-
         return 0;
     } else {
         return -1;

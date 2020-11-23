@@ -57,9 +57,23 @@ int evaluation::execute()
             if (is_eval_scalar()) {
                 total = values[expr_id];
             } else {
-                dim_ = array_values[expr_id]->get_dim();
-                data_ = array_values[expr_id]->get_data();
-                shape_ = array_values[expr_id]->get_shape();
+                if (op_type.compare("Input2d") == 0) {
+                    dim_ = array_values[expr_id]->get_dim();
+                    data_ = array_values[expr_id]->get_data();
+                    shape_ = new size_t[4];
+                    size_t N = array_values[expr_id]->get_shape()[0];
+                    size_t H = array_values[expr_id]->get_shape()[1];
+                    size_t W = array_values[expr_id]->get_shape()[2];
+                    size_t C = array_values[expr_id]->get_shape()[3];
+                    shape_[0] = N;
+                    shape_[1] = C;
+                    shape_[2] = H;
+                    shape_[3] = W;
+                } else {
+                    dim_ = array_values[expr_id]->get_dim();
+                    data_ = array_values[expr_id]->get_data();
+                    shape_ = array_values[expr_id]->get_shape();
+                }
             }
             continue;
         }
@@ -105,8 +119,9 @@ int evaluation::execute()
 ndarray * evaluation::evaluate_ndarrays(std::list<ndarray *> arrays, std::string op_type) {
     ndarray * result;
     bool firstLoop = true;
+    int count = 0;
     for (auto array : arrays) {
-        if (firstLoop) {
+        if (firstLoop && op_type.compare("Input") == 0) {
             result = new ndarray(array->get_dim(), array->get_shape(), array->get_data());
             firstLoop = false;
             continue;
@@ -119,6 +134,14 @@ ndarray * evaluation::evaluate_ndarrays(std::list<ndarray *> arrays, std::string
         }
         else if (op_type.compare("Mul") == 0) {
             result->mul_data(array);
+        }
+        else if (op_type.compare("ReLU") == 0) {
+            result = new ndarray(array->get_dim(), array->get_shape(), array->get_data());
+            result->relu();
+        }
+        else if (op_type.compare("Flatten") == 0) {
+            result = new ndarray(array->get_dim(), array->get_shape(), array->get_data());
+            result->flatten();
         }
         else {
             std::cout << "Incorrect Op Type" << '\n';

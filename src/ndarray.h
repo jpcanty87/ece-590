@@ -25,6 +25,8 @@ public:
     void add_data(ndarray * array);
     void sub_data(ndarray * array);
     void mul_data(ndarray * array);
+    void relu();
+    void flatten();
 
 private:
     int dim;
