@@ -6,4 +6,4 @@ libeasynn:
 	g++ -Wall src/*.cpp -fPIC -O -g -shared -o libeasynn.so
 
 easynn_test: libeasynn
-	g++ -Wall easynn_test.cpp -g -lm -L. -Wl, -leasynn -o easynn_test
+	g++ -Wall easynn_test.cpp -g -lm -L. -Wl,-rpath=. -leasynn -o easynn_test
